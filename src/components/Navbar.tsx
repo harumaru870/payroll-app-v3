@@ -31,7 +31,8 @@ export default function Navbar() {
     ];
 
     return (
-        <nav className="fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-md border-b border-gray-200 z-[100]">
+        <nav className={`fixed top-0 left-0 right-0 h-16 transition-colors z-[100] border-b ${isMenuOpen ? 'bg-white border-gray-200 shadow-md' : 'bg-white/80 backdrop-blur-md border-gray-200'
+            }`}>
             <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
                 <div className="flex items-center gap-8">
                     <Link href="/" className="flex items-center gap-2 font-bold text-xl text-indigo-600 shrink-0" onClick={closeMenu}>
@@ -111,7 +112,7 @@ export default function Navbar() {
 
             {/* モバイルメニューオーバーレイ */}
             {isMenuOpen && user && (
-                <div className="md:hidden fixed inset-0 top-16 bg-white z-[90] animate-in fade-in slide-in-from-top-4 duration-200">
+                <div className="md:hidden fixed inset-0 top-16 bg-white z-[90] animate-in fade-in slide-in-from-top-4 duration-200 shadow-2xl border-t border-gray-100">
                     <div className="p-4 space-y-4">
                         <div className="px-4 py-3 bg-gray-50 rounded-2xl mb-6">
                             <p className="font-bold text-gray-900">{user.name}</p>

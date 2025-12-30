@@ -2,7 +2,7 @@ import { auth0 } from '@/lib/auth0';
 import { getDashboardData } from '@/app/actions';
 import { LogIn, Users, Calendar, TrendingUp, Download, Plus, ArrowRight, History, Clock } from 'lucide-react';
 import Link from 'next/link';
-import { formatDate } from '@/utils/date';
+import { formatDate, getJSTNow } from '@/utils/date';
 
 export default async function Home() {
   const session = await auth0.getSession();
@@ -46,7 +46,7 @@ export default async function Home() {
   }
 
   const stats = await getDashboardData();
-  const now = new Date();
+  const now = getJSTNow();
   const monthName = now.toLocaleDateString('ja-JP', { month: 'long' });
 
   return (

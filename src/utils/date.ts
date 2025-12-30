@@ -19,3 +19,14 @@ export function safeParseDate(dateInput: any): Date {
 export function formatDate(dateInput: any): string {
     return safeParseDate(dateInput).toLocaleDateString('ja-JP');
 }
+
+/**
+ * 日本標準時 (JST) での「現在時刻」を取得する
+ * サーバー(UTC)上でも正しい日本時間を扱うためのユーティリティ
+ */
+export function getJSTNow(): Date {
+    const now = new Date();
+    // UTC時間に9時間を足したDateオブジェクトを返す（簡易的なJST化）
+    const jstOffset = 9 * 60 * 60 * 1000;
+    return new Date(now.getTime() + jstOffset);
+}

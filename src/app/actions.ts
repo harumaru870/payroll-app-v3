@@ -5,7 +5,7 @@ import { employees, wageSettings, shifts, systemSettings } from '@/db/schema';
 import { eq, desc, and, gte, lte } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { randomUUID } from 'node:crypto';
-import { safeParseDate } from '@/utils/date';
+import { safeParseDate, getJSTNow } from '@/utils/date';
 import { calculateShiftPay, getEffectiveWage } from '@/utils/payroll';
 
 // --- Employee Actions ---
@@ -142,7 +142,7 @@ export async function updateSystemSettings(data: Partial<typeof systemSettings.$
 // --- Dashboard & Payroll Aggregation ---
 
 export async function getDashboardData() {
-    const now = new Date();
+    const now = getJSTNow();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
     const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
 
