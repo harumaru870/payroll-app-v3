@@ -5,7 +5,7 @@ import { employees, wageSettings, shifts, systemSettings } from '@/db/schema';
 import { eq, desc, and, gte, lte } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { randomUUID } from 'node:crypto';
-import { safeParseDate, getJSTNow, getPayrollPeriod, getCurrentPayrollPeriod } from '@/utils/date';
+import { safeParseDate, getJSTNow, getPayrollPeriod, getCurrentPayrollPeriod, toJSTDate } from '@/utils/date';
 import { calculateShiftPay, getEffectiveWage } from '@/utils/payroll';
 
 // --- Employee Actions ---
@@ -95,8 +95,8 @@ export async function getShifts(employeeId: string, year: number, month: number)
 }
 
 export async function upsertShift(data: typeof shifts.$inferInsert) {
-    const normalizedDate = safeParseDate(data.date);
-    normalizedDate.setHours(0, 0, 0, 0);
+    // タイムゾーンのズレを防ぐため、JSTとして正規化して保存する
+    const normalizedDate = toJSTDate(data.date);
 
     const finalData = { ...data, date: normalizedDate };
 

@@ -32,6 +32,34 @@ export function getJSTNow(): Date {
 }
 
 /**
+ * 入力された日付をJSTの「日付」として解釈し、正規化する。
+ * UTCの 2024-01-01 00:00:00 (JST 09:00) のような形、
+ * あるいは JSTでの日付が変わらないような安全な時刻（正午など）に変換して返す。
+ * ここではシンプルに「JSTでの年月日」を取得し、その年月日の 00:00:00 UTC を作成して返す。
+ */
+export function toJSTDate(dateInput: any): Date {
+    // 1. まずDateオブジェクト化
+    const d = safeParseDate(dateInput);
+
+    // 2. これが "JSTの0時" (つまりUTCの前日15時) だったり、
+    //    "UTCの0時" (つまりJSTの9時) だったりする。
+    //    もしクライアント(JST)から "2025-01-01 00:00:00" が送られてくると、
+    //    ISO文字列は "2024-12-31T15:00:00.000Z" になる。
+    //    サーバー(UTC)でそのまま getDay() すると 31日になってしまう。
+
+    // なので、9時間足して「JSTでの時刻」に戻してから年月日を取り出す。
+    const jstOffset = 9 * 60 * 60 * 1000;
+    const jstTime = new Date(d.getTime() + jstOffset);
+
+    const year = jstTime.getUTCFullYear();
+    const month = jstTime.getUTCMonth();
+    const day = jstTime.getUTCDate();
+
+    // 3. その年月日の UTC 00:00:00 を返す (これをDBに保存すれば日付はズレない)
+    return new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
+}
+
+/**
  * 年、月、締め日に基づいて給与計算期間の開始日と終了日を算出する
  * @param year 対象年
  * @param month 対象月 (1-12)
