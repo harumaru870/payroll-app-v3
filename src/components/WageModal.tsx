@@ -40,11 +40,11 @@ export default function WageModal({ employeeId, onClose, currentWage, currentFee
 
     return (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" onClick={onClose} />
-            <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
-                <div className="px-8 py-6 border-b border-gray-50 flex items-center justify-between">
-                    <h2 className="text-xl font-bold text-gray-900">昇給・時給の変更</h2>
-                    <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+            <div className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" onClick={onClose} />
+            <div className="relative w-full max-w-md bg-card rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 border border-card-border">
+                <div className="px-8 py-6 border-b border-card-border flex items-center justify-between">
+                    <h2 className="text-xl font-bold text-foreground">昇給・時給の変更</h2>
+                    <button onClick={onClose} className="p-2 hover:bg-background dark:hover:bg-indigo-900/20 rounded-full transition-colors">
                         <X className="w-5 h-5 text-gray-400" />
                     </button>
                 </div>
@@ -52,12 +52,12 @@ export default function WageModal({ employeeId, onClose, currentWage, currentFee
                 <form onSubmit={handleSubmit} className="p-8 space-y-6">
                     <div className="space-y-4">
                         <div className="space-y-2">
-                            <label className="text-sm font-bold text-gray-700">新しい時給</label>
+                            <label className="text-sm font-bold text-gray-700 dark:text-gray-300">新しい時給</label>
                             <div className="relative">
                                 <input
                                     type="number"
                                     required
-                                    className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
+                                    className="w-full pl-10 pr-4 py-3 bg-background border border-card-border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-foreground"
                                     value={formData.hourlyWage}
                                     onChange={e => setFormData({ ...formData, hourlyWage: parseInt(e.target.value) })}
                                 />
@@ -66,12 +66,12 @@ export default function WageModal({ employeeId, onClose, currentWage, currentFee
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-bold text-gray-700">交通費 (1日)</label>
+                            <label className="text-sm font-bold text-gray-700 dark:text-gray-300">交通費 (1日)</label>
                             <div className="relative">
                                 <input
                                     type="number"
                                     required
-                                    className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
+                                    className="w-full pl-10 pr-4 py-3 bg-background border border-card-border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-foreground"
                                     value={formData.transportationFee}
                                     onChange={e => setFormData({ ...formData, transportationFee: parseInt(e.target.value) })}
                                 />
@@ -80,12 +80,12 @@ export default function WageModal({ employeeId, onClose, currentWage, currentFee
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-bold text-gray-700">適用開始日</label>
+                            <label className="text-sm font-bold text-gray-700 dark:text-gray-300">適用開始日</label>
                             <div className="relative">
                                 <input
                                     type="date"
                                     required
-                                    className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
+                                    className="w-full pl-10 pr-4 py-3 bg-background border border-card-border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-foreground"
                                     value={formData.effectiveFrom}
                                     onChange={e => setFormData({ ...formData, effectiveFrom: e.target.value })}
                                 />
@@ -98,7 +98,7 @@ export default function WageModal({ employeeId, onClose, currentWage, currentFee
                         <button
                             type="submit"
                             disabled={isPending}
-                            className="w-full flex items-center justify-center gap-2 py-4 bg-indigo-600 text-white rounded-2xl hover:bg-indigo-700 disabled:opacity-50 font-bold transition-all shadow-lg shadow-indigo-100"
+                            className="w-full flex items-center justify-center gap-2 py-4 bg-indigo-600 text-white rounded-2xl hover:bg-indigo-700 disabled:opacity-50 font-bold transition-all shadow-lg dark:shadow-none"
                         >
                             {isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : <span>履歴に追加する</span>}
                         </button>

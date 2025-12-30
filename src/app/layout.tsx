@@ -22,7 +22,7 @@ export default async function RootLayout({
 
   return (
     <html lang="ja">
-      <body className={`${inter.className} bg-gray-50 text-gray-900 antialiased`}>
+      <body className={`${inter.className} bg-background text-foreground antialiased`}>
         <Auth0Provider user={user}>
           <Navbar />
           <main className="pt-16 min-h-screen">

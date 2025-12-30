@@ -31,7 +31,9 @@ export default function Navbar() {
     ];
 
     return (
-        <nav className={`fixed top-0 left-0 right-0 h-16 transition-colors z-[100] border-b ${isMenuOpen ? 'bg-white border-gray-200 shadow-md' : 'bg-white/80 backdrop-blur-md border-gray-200'
+        <nav className={`fixed top-0 left-0 right-0 h-16 transition-all duration-300 z-[100] border-b ${isMenuOpen
+                ? 'bg-background border-card-border shadow-md'
+                : 'bg-background/80 backdrop-blur-md border-card-border'
             }`}>
             <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
                 <div className="flex items-center gap-8">
@@ -41,12 +43,12 @@ export default function Navbar() {
                     </Link>
 
                     {user && (
-                        <div className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
+                        <div className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600 dark:text-gray-400">
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.href}
                                     href={link.href}
-                                    className="flex items-center gap-1 hover:text-indigo-600 transition-colors"
+                                    className="flex items-center gap-1 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                                 >
                                     <link.icon className="w-4 h-4" />
                                     <span>{link.label}</span>
@@ -60,16 +62,16 @@ export default function Navbar() {
                     {/* PC用ユーザー情報 */}
                     <div className="hidden sm:flex items-center gap-4">
                         {isLoading ? (
-                            <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
+                            <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse" />
                         ) : user ? (
                             <div className="flex items-center gap-4">
                                 <div className="text-right text-sm">
-                                    <p className="font-semibold text-gray-900 leading-none">{user.name}</p>
-                                    <p className="text-gray-500 text-[10px] mt-1">{user.email}</p>
+                                    <p className="font-semibold text-foreground leading-none">{user.name}</p>
+                                    <p className="text-gray-500 dark:text-gray-400 text-[10px] mt-1">{user.email}</p>
                                 </div>
                                 <a
                                     href="/auth/logout"
-                                    className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                    className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                                     title="ログアウト"
                                 >
                                     <LogOut className="w-4 h-4" />
@@ -91,7 +93,7 @@ export default function Navbar() {
                     {user && (
                         <button
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            className="md:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                            className="md:hidden p-2 text-foreground hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                             aria-label="メニューを開く"
                         >
                             {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -112,11 +114,11 @@ export default function Navbar() {
 
             {/* モバイルメニューオーバーレイ */}
             {isMenuOpen && user && (
-                <div className="md:hidden fixed inset-0 top-16 bg-white z-[90] animate-in fade-in slide-in-from-top-4 duration-200 shadow-2xl border-t border-gray-100">
+                <div className="md:hidden fixed inset-0 top-16 bg-background z-[90] animate-in fade-in slide-in-from-top-4 duration-200 shadow-2xl border-t border-card-border text-foreground">
                     <div className="p-4 space-y-4">
-                        <div className="px-4 py-3 bg-gray-50 rounded-2xl mb-6">
-                            <p className="font-bold text-gray-900">{user.name}</p>
-                            <p className="text-sm text-gray-500">{user.email}</p>
+                        <div className="px-4 py-3 bg-card rounded-2xl mb-6 border border-card-border">
+                            <p className="font-bold text-foreground">{user.name}</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
                         </div>
 
                         <div className="grid grid-cols-1 gap-2">
@@ -125,9 +127,9 @@ export default function Navbar() {
                                     key={link.href}
                                     href={link.href}
                                     onClick={closeMenu}
-                                    className="flex items-center gap-4 p-4 text-gray-700 font-bold hover:bg-indigo-50 hover:text-indigo-600 rounded-2xl transition-all active:scale-[0.98]"
+                                    className="flex items-center gap-4 p-4 text-foreground font-bold hover:bg-indigo-50 dark:hover:bg-indigo-900/20 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-2xl transition-all active:scale-[0.98]"
                                 >
-                                    <div className="p-2 bg-white rounded-xl shadow-sm">
+                                    <div className="p-2 bg-card rounded-xl shadow-sm border border-card-border">
                                         <link.icon className="w-5 h-5" />
                                     </div>
                                     <span>{link.label}</span>
@@ -135,12 +137,12 @@ export default function Navbar() {
                             ))}
                         </div>
 
-                        <div className="pt-6 border-t border-gray-100">
+                        <div className="pt-6 border-t border-card-border">
                             <a
                                 href="/auth/logout"
-                                className="flex items-center gap-4 p-4 text-red-600 font-bold hover:bg-red-50 rounded-2xl transition-all"
+                                className="flex items-center gap-4 p-4 text-red-600 dark:text-red-400 font-bold hover:bg-red-50 dark:hover:bg-red-900/20 rounded-2xl transition-all"
                             >
-                                <div className="p-2 bg-white rounded-xl shadow-sm border border-red-50">
+                                <div className="p-2 bg-card rounded-xl shadow-sm border border-red-50 dark:border-red-900/30">
                                     <LogOut className="w-5 h-5" />
                                 </div>
                                 <span>ログアウト</span>

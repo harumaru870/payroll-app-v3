@@ -45,28 +45,28 @@ export default function SettingsPage() {
     return (
         <div className="max-w-2xl mx-auto space-y-8">
             <div className="flex items-center gap-4">
-                <div className="p-3 bg-indigo-100 rounded-2xl">
-                    <Settings className="w-8 h-8 text-indigo-600" />
+                <div className="p-3 bg-indigo-100 dark:bg-indigo-900/40 rounded-2xl">
+                    <Settings className="w-8 h-8 text-indigo-600 dark:text-indigo-400" />
                 </div>
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">システム設定</h1>
-                    <p className="text-gray-500 mt-1">給与計算の基準や会社情報を設定します。</p>
+                    <h1 className="text-3xl font-bold text-foreground">システム設定</h1>
+                    <p className="text-gray-500 dark:text-gray-400 mt-1">給与計算の基準や会社情報を設定します。</p>
                 </div>
             </div>
 
-            <form onSubmit={handleSave} className="bg-white rounded-3xl border border-gray-100 shadow-xl overflow-hidden">
+            <form onSubmit={handleSave} className="bg-card rounded-3xl border border-card-border shadow-xl overflow-hidden">
                 <div className="p-8 space-y-8">
                     {/* Company Name */}
                     <div className="space-y-4">
-                        <label className="flex items-center gap-2 text-sm font-bold text-gray-700">
-                            <Building2 className="w-4 h-4 text-indigo-500" />
+                        <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300">
+                            <Building2 className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
                             会社名・拠点名
                         </label>
                         <input
                             type="text"
                             value={settings.companyName}
                             onChange={(e) => setSettings({ ...settings, companyName: e.target.value })}
-                            className="w-full px-5 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500 transition-all font-medium text-gray-900"
+                            className="w-full px-5 py-4 bg-background border border-card-border rounded-2xl focus:ring-2 focus:ring-indigo-500 transition-all font-medium text-foreground"
                             placeholder="株式会社 〇〇"
                             required
                         />
@@ -76,15 +76,15 @@ export default function SettingsPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         {/* Closing Date */}
                         <div className="space-y-4">
-                            <label className="flex items-center gap-2 text-sm font-bold text-gray-700">
-                                <Calendar className="w-4 h-4 text-indigo-500" />
+                            <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300">
+                                <Calendar className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
                                 締め日
                             </label>
                             <div className="relative">
                                 <select
                                     value={settings.closingDate}
                                     onChange={(e) => setSettings({ ...settings, closingDate: parseInt(e.target.value) })}
-                                    className="w-full px-5 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500 transition-all font-medium text-gray-900 appearance-none"
+                                    className="w-full px-5 py-4 bg-background border border-card-border rounded-2xl focus:ring-2 focus:ring-indigo-500 transition-all font-medium text-foreground appearance-none"
                                 >
                                     {[...Array(30)].map((_, i) => (
                                         <option key={i + 1} value={i + 1}>{i + 1}日</option>
@@ -99,25 +99,25 @@ export default function SettingsPage() {
 
                         {/* Night Shift Start */}
                         <div className="space-y-4">
-                            <label className="flex items-center gap-2 text-sm font-bold text-gray-700">
-                                <Clock className="w-4 h-4 text-indigo-500" />
+                            <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300">
+                                <Clock className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
                                 深夜時間帯の開始
                             </label>
                             <input
                                 type="time"
                                 value={settings.nightShiftStart}
                                 onChange={(e) => setSettings({ ...settings, nightShiftStart: e.target.value })}
-                                className="w-full px-5 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500 transition-all font-medium text-gray-900"
+                                className="w-full px-5 py-4 bg-background border border-card-border rounded-2xl focus:ring-2 focus:ring-indigo-500 transition-all font-medium text-foreground"
                                 required
                             />
                         </div>
                     </div>
                 </div>
 
-                <div className="p-8 bg-gray-50/50 border-t border-gray-100 flex items-center justify-between">
+                <div className="p-8 bg-background dark:bg-card border-t border-card-border flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         {showSuccess && (
-                            <div className="flex items-center gap-2 text-emerald-600 animate-in fade-in slide-in-from-left-4">
+                            <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 animate-in fade-in slide-in-from-left-4">
                                 <CheckCircle2 className="w-5 h-5" />
                                 <span className="font-bold text-sm">設定を保存しました</span>
                             </div>
@@ -126,7 +126,7 @@ export default function SettingsPage() {
                     <button
                         type="submit"
                         disabled={isPending}
-                        className="flex items-center gap-2 px-8 py-4 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 text-white rounded-2xl font-bold transition-all shadow-lg shadow-indigo-200 hover:scale-[1.02] active:scale-95"
+                        className="flex items-center gap-2 px-8 py-4 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 text-white rounded-2xl font-bold transition-all shadow-lg dark:shadow-none hover:scale-[1.02] active:scale-95"
                     >
                         {isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
                         設定を保存する
