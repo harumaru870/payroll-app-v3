@@ -15,20 +15,20 @@ const PayrollPDFButton = dynamic(() => import('./PayrollPDFButton'), { ssr: fals
 
 interface ShiftManagementProps {
     employees: any[];
+    initialSettings: any;
 }
 
-export default function ShiftManagement({ employees }: ShiftManagementProps) {
+export default function ShiftManagement({ employees, initialSettings }: ShiftManagementProps) {
     const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>(employees[0]?.id || '');
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
     const [shifts, setShifts] = useState<any[]>([]);
     const [isPending, setIsPending] = useState(false);
     const [isLoadingShifts, setIsLoadingShifts] = useState(false);
-    const [systemSettings, setSystemSettings] = useState<any>(null);
+    const [systemSettings] = useState<any>(initialSettings);
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
         setIsClient(true);
-        getSystemSettings().then(setSystemSettings);
     }, []);
 
     const [formData, setFormData] = useState({
@@ -52,7 +52,7 @@ export default function ShiftManagement({ employees }: ShiftManagementProps) {
         if (!selectedEmployeeId) return;
         setIsLoadingShifts(true);
         try {
-            const data = await getShifts(selectedEmployeeId, selectedDate);
+            const data = await getShifts(selectedEmployeeId, payrollInfo.year, payrollInfo.month);
             setShifts(data);
         } catch (error) {
             console.error(error);

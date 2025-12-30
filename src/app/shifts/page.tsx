@@ -1,9 +1,12 @@
-import { getEmployees } from '@/app/actions';
+import { getEmployees, getSystemSettings } from '@/app/actions';
 import ShiftManagement from '@/components/ShiftManagement';
 import { Calendar } from 'lucide-react';
 
 export default async function ShiftsPage() {
-    const employees = await getEmployees();
+    const [employees, settings] = await Promise.all([
+        getEmployees(),
+        getSystemSettings()
+    ]);
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -26,7 +29,7 @@ export default async function ShiftsPage() {
                     <p className="text-gray-500">まずは従業員一覧からメンバーを追加してください。</p>
                 </div>
             ) : (
-                <ShiftManagement employees={employees} />
+                <ShiftManagement employees={employees} initialSettings={settings} />
             )}
         </div>
     );

@@ -80,9 +80,9 @@ export async function deleteEmployee(id: string) {
 
 // --- Shift Actions ---
 
-export async function getShifts(employeeId: string, month: Date) {
+export async function getShifts(employeeId: string, year: number, month: number) {
     const settings = await getSystemSettings();
-    const { start, end } = getPayrollPeriod(month.getFullYear(), month.getMonth() + 1, settings.closingDate);
+    const { start, end } = getPayrollPeriod(year, month, settings.closingDate);
 
     return await db.query.shifts.findMany({
         where: (shifts, { and, eq, gte, lte }) => and(
