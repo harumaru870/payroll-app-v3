@@ -3,9 +3,9 @@
 import { useState, useEffect, useMemo } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import { format, startOfMonth, endOfMonth, isSameDay } from 'date-fns';
+import { format, startOfMonth, endOfMonth, isSameDay, addMonths, subMonths } from 'date-fns';
 import { ja } from 'date-fns/locale';
-import { Plus, Clock, Save, Trash2, User as UserIcon, AlertCircle, Loader2, FileText } from 'lucide-react';
+import { Plus, Clock, Save, Trash2, User as UserIcon, AlertCircle, Loader2, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
 import { upsertShift, deleteShift, getShifts, getSystemSettings } from '@/app/actions';
 import { calculateShiftPay, getEffectiveWage, type CalculatedShift } from '@/utils/payroll';
 import { getPayrollInfoDate } from '@/utils/date';
@@ -134,6 +134,14 @@ export default function ShiftManagement({ employees, initialSettings }: ShiftMan
         } finally {
             setIsPending(false);
         }
+    };
+
+    const handlePrevMonth = () => {
+        setSelectedDate(subMonths(selectedDate, 1));
+    };
+
+    const handleNextMonth = () => {
+        setSelectedDate(addMonths(selectedDate, 1));
     };
 
     return (
@@ -353,9 +361,26 @@ export default function ShiftManagement({ employees, initialSettings }: ShiftMan
                 {/* Monthly List Table */}
                 <div className="bg-card rounded-3xl border border-card-border shadow-xl overflow-hidden mt-8 text-foreground">
                     <div className="p-8 border-b border-card-border flex items-center justify-between">
-                        <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
+                        <h2 className="text-xl font-bold text-foreground flex items-center gap-4">
                             <Plus className="w-6 h-6 text-indigo-500 dark:text-indigo-400" />
-                            <span>{payrollInfo.year}年 {payrollInfo.month}月度 の出勤一覧</span>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={handlePrevMonth}
+                                    className="p-1 hover:bg-indigo-50 dark:hover:bg-indigo-900/40 rounded-lg text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                                    title="前の月へ"
+                                >
+                                    <ChevronLeft className="w-5 h-5" />
+                                </button>
+                                <span className="min-w-[140px] text-center">{payrollInfo.year}年 {payrollInfo.month}月度</span>
+                                <button
+                                    onClick={handleNextMonth}
+                                    className="p-1 hover:bg-indigo-50 dark:hover:bg-indigo-900/40 rounded-lg text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                                    title="次の月へ"
+                                >
+                                    <ChevronRight className="w-5 h-5" />
+                                </button>
+                            </div>
+                            <span className="text-sm font-normal text-gray-400 dark:text-gray-500 ml-1">の出勤一覧</span>
                         </h2>
                         <div className="flex items-center gap-4">
                             {selectedEmployee && shifts.length > 0 && systemSettings && (
