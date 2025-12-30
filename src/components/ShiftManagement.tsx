@@ -8,6 +8,7 @@ import { ja } from 'date-fns/locale';
 import { Plus, Clock, Save, Trash2, User as UserIcon, AlertCircle, Loader2, FileText } from 'lucide-react';
 import { upsertShift, deleteShift, getShifts, getSystemSettings } from '@/app/actions';
 import { calculateShiftPay, getEffectiveWage, type CalculatedShift } from '@/utils/payroll';
+import { getPayrollInfoDate } from '@/utils/date';
 import dynamic from 'next/dynamic';
 
 const PayrollPDFButton = dynamic(() => import('./PayrollPDFButton'), { ssr: false });
@@ -42,6 +43,11 @@ export default function ShiftManagement({ employees }: ShiftManagementProps) {
         [selectedEmployeeId, employees]
     );
 
+    const payrollInfo = useMemo(() => {
+        if (!systemSettings) return { year: selectedDate.getFullYear(), month: selectedDate.getMonth() + 1 };
+        return getPayrollInfoDate(selectedDate, systemSettings.closingDate);
+    }, [selectedDate, systemSettings]);
+
     const fetchShifts = async () => {
         if (!selectedEmployeeId) return;
         setIsLoadingShifts(true);
@@ -57,7 +63,7 @@ export default function ShiftManagement({ employees }: ShiftManagementProps) {
 
     useEffect(() => {
         fetchShifts();
-    }, [selectedEmployeeId, selectedDate.getMonth()]);
+    }, [selectedEmployeeId, payrollInfo.year, payrollInfo.month]);
 
     const currentDayShift = useMemo(() =>
         shifts.find(s => isSameDay(new Date(s.date), selectedDate)),
@@ -349,7 +355,7 @@ export default function ShiftManagement({ employees }: ShiftManagementProps) {
                     <div className="p-8 border-b border-card-border flex items-center justify-between">
                         <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
                             <Plus className="w-6 h-6 text-indigo-500 dark:text-indigo-400" />
-                            <span>{format(selectedDate, 'yyyy年 MM月')} の出勤一覧</span>
+                            <span>{payrollInfo.year}年 {payrollInfo.month}月度 の出勤一覧</span>
                         </h2>
                         <div className="flex items-center gap-4">
                             {selectedEmployee && shifts.length > 0 && systemSettings && (
@@ -358,8 +364,8 @@ export default function ShiftManagement({ employees }: ShiftManagementProps) {
                                     shifts: shifts,
                                     settings: systemSettings,
                                     period: {
-                                        year: selectedDate.getFullYear(),
-                                        month: selectedDate.getMonth() + 1
+                                        year: payrollInfo.year,
+                                        month: payrollInfo.month
                                     }
                                 }} />
                             )}

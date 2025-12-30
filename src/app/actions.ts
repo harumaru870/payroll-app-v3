@@ -5,7 +5,7 @@ import { employees, wageSettings, shifts, systemSettings } from '@/db/schema';
 import { eq, desc, and, gte, lte } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { randomUUID } from 'node:crypto';
-import { safeParseDate, getJSTNow } from '@/utils/date';
+import { safeParseDate, getJSTNow, getPayrollPeriod, getCurrentPayrollPeriod } from '@/utils/date';
 import { calculateShiftPay, getEffectiveWage } from '@/utils/payroll';
 
 // --- Employee Actions ---
@@ -81,8 +81,8 @@ export async function deleteEmployee(id: string) {
 // --- Shift Actions ---
 
 export async function getShifts(employeeId: string, month: Date) {
-    const start = new Date(month.getFullYear(), month.getMonth(), 1, 0, 0, 0, 0);
-    const end = new Date(month.getFullYear(), month.getMonth() + 1, 0, 23, 59, 59, 999);
+    const settings = await getSystemSettings();
+    const { start, end } = getPayrollPeriod(month.getFullYear(), month.getMonth() + 1, settings.closingDate);
 
     return await db.query.shifts.findMany({
         where: (shifts, { and, eq, gte, lte }) => and(
@@ -142,9 +142,9 @@ export async function updateSystemSettings(data: Partial<typeof systemSettings.$
 // --- Dashboard & Payroll Aggregation ---
 
 export async function getDashboardData() {
-    const now = getJSTNow();
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
-    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+    const settings = await getSystemSettings();
+    const period = getCurrentPayrollPeriod(settings.closingDate);
+    const { start: startOfMonth, end: endOfMonth } = period;
 
     const employeesData = await db.query.employees.findMany({
         where: eq(employees.status, 'active'),
@@ -200,13 +200,17 @@ export async function getDashboardData() {
         activeEmployeeCount: employeesData.length,
         totalSalary,
         totalHours: Math.floor(totalMinutes / 60),
-        recentShifts
+        recentShifts,
+        period: {
+            year: period.year,
+            month: period.month
+        }
     };
 }
 
 export async function getPayrollData(employeeId: string, year: number, month: number) {
-    const start = new Date(year, month - 1, 1, 0, 0, 0, 0);
-    const end = new Date(year, month, 0, 23, 59, 59, 999);
+    const settings = await getSystemSettings();
+    const { start, end } = getPayrollPeriod(year, month, settings.closingDate);
 
     const employee = await db.query.employees.findFirst({
         where: eq(employees.id, employeeId),
@@ -227,8 +231,6 @@ export async function getPayrollData(employeeId: string, year: number, month: nu
         ),
         orderBy: [shifts.date],
     });
-
-    const settings = await getSystemSettings();
 
     return {
         employee,
